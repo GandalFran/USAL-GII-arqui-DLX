@@ -75,30 +75,25 @@
 		;; |M2(A+B)| -> K
 		;;Primera parte del determinante
 		multf f28,f18,f19
-		multf f27,f28,f26
+		multf f30,f28,f26
 
-		ldf f30,f27
 		multf f28,f19,f23
 		multf f29,f28,f24
 		addf f27,f30,f29
 
-		ldf f30,f27
 		multf f28,f20,f21
 		multf f29,f28,f25
-		addf f27,f30,f29
+		addf f30,f27,f29
 
 		;;Segunda parte del terminante
-		ldf f30,f27
 		multf f28,f20,f22
 		multf f29,f28,f24
 		subf f27,f30,f29
 
-		ldf f30,f27
 		multf f28,f23,f25
 		multf f29,f28,f18
-		subf f27,f29,f30
+		subf f30,f29,f27
 
-		ldf f30,f27
 		multf f28,f19,f21
 		multf f29,f28,f26
 		subf f27,f30,f29
