@@ -27,8 +27,6 @@
 
 	Alfa:	.float 1.235
 
-	value0: .float 0.0
-	value1: .float 566.967489
 .text
 
 .global main
@@ -74,7 +72,7 @@
 
 		;; |M2(A+B)| -> K
 		;;Primera parte del determinante
-		multf f28,f18,f19
+		multf f28,f18,f22
 		multf f30,f28,f26
 
 		multf f28,f19,f23
