@@ -25,10 +25,12 @@
 		.float 17.000000, 15.000000, 17.000000
 		.float 14.000000, 17.000000, 15.000000
 
+	M:	.float 0.000000, 0.000000, 0.000000
+		.float 0.000000, 0.000000, 0.000000
+		.float 0.000000, 0.000000, 0.000000
+
 	Alfa:	.float 1.235
 
-	value0: .float 0.0
-	value1: .float 566.967489
 .text
 
 .global main
@@ -71,13 +73,34 @@
 	;;;;;;;;;;;;;;;;;STEP2;;;;;;;;;;;;;;;;;;; 
 	
 		;; 0 -> K
-		;;lf f27,value0
 
 		;; |M2(A+B)| -> K
-		;;HECTOR HAZ AQUI EL DETERMINANTE
+		;;Primera parte del determinante
+		multf f28,f18,f22
+		multf f30,f28,f26
+
+		multf f28,f19,f23
+		multf f29,f28,f24
+		addf f27,f30,f29
+
+		multf f28,f20,f21
+		multf f29,f28,f25
+		addf f30,f27,f29
+
+		;;Segunda parte del terminante
+		multf f28,f20,f22
+		multf f29,f28,f24
+		subf f27,f30,f29
+
+		multf f28,f23,f25
+		multf f29,f28,f18
+		subf f30,f29,f27
+
+		multf f28,f19,f21
+		multf f29,f28,f26
+		subf f27,f30,f29
 
 		;; TEMPORAL -> K = 1 temporal para poder hacer el resto de ops
-		lf f27,value1
 
 	;;;;;;;;;;;;;;;;;STEP3;;;;;;;;;;;;;;;;;;; 
 
@@ -192,7 +215,18 @@
 		addf f16,f7,f25
 		addf f17,f8,f26
 
+	;;;;;;;;;;;;;STORE RESULT;;;;;;;;;;;;;;; 
+
+		sf M,f9
+		sf M+4,f10
+		sf M+8,f11
+		sf M+12,f12
+		sf M+16,f13
+		sf M+20,f14
+		sf M+24,f15
+		sf M+28,f16
+		sf M+32,f17
+
 	;;;;;;;;;;;;;;;;;END;;;;;;;;;;;;;;;;;;; 
-	
 		trap 0;
 .text
