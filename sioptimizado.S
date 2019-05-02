@@ -37,38 +37,48 @@
 	main:
 	;;;;;;;;;;;;;;;;;STEP1;;;;;;;;;;;;;;;;;;; 
 
-		;; Load A -> M0
-		lf f0,A
-		lf f1,A+4
-		lf f2,A+8
-		lf f3,A+12
-		lf f4,A+16
-		lf f5,A+20
-		lf f6,A+24
-		lf f7,A+28
-		lf f8,A+32
+		lf f0,A		;; Load A[0] -> f0
+		lf f9,B		;; Load B[0] -> f9
 
-		;; Load B -> M1
-		lf f9,B
-		lf f10,B+4
-		lf f11,B+8
-		lf f12,B+12
-		lf f13,B+16
-		lf f14,B+20
-		lf f15,B+24
-		lf f16,B+28
-		lf f17,B+32
+		lf f1,A+4	;; Load A[1] -> f1
+		lf f10,B+4	;; Load B[1] -> f10
 
-		;; M0(A) + M1(B) -> M2
-		addf f18,f0,f9
-		addf f19,f1,f10
-		addf f20,f2,f11
-		addf f21,f3,f12
-		addf f22,f4,f13
-		addf f23,f5,f14
-		addf f24,f6,f15
-		addf f25,f7,f16
-		addf f26,f8,f17
+		addf f18,f0,f19	;; M2[0] <- M0[0] + M1[0]
+		lf f2,A+8	;; Load A[2] -> f2
+		lf f11,B+8	;; Load B[2] -> f11
+
+		addf f19,f1,f10	;; M2[1] <- M0[1] + M1[1]
+
+		lf f3,A+12	;; Load A[3] -> f3
+		lf f12,B+12	;; Load B[3] -> f12
+
+		addf f20,f2,f11	;; M2[2] <- M0[2] + M1[2]
+
+		lf f4,A+16	;; Load A[4] -> f4
+		lf f13,B+16	;; Load B[4] -> f13
+
+		addf f21,f3,f12	;; M2[3] <- M0[3] + M1[3]
+
+		lf f5,A+20	;; Load A[5] -> f5
+		lf f14,B+20	;; Load B[5] -> f14
+
+		addf f22,f4,f13	;; M2[4] <- M0[4] + M1[4]
+
+		lf f6,A+24	;; Load A[6] -> f6
+		lf f15,B+24	;; Load B[6] -> f15
+
+		addf f23,f5,f14	;; M2[5] <- M0[5] + M1[5]
+
+		lf f7,A+28	;; Load A[7] -> f7
+		lf f16,B+28	;; Load B[7] -> f16
+
+		addf f24,f6,f15	;; M2[6] <- M0[6] + M1[6]
+
+		lf f8,A+32	;; Load A[8] -> f8
+		lf f17,B+32	;; Load B[8] -> f17
+
+		addf f25,f7,f16	;; M2[7] <- M0[7] + M1[7]
+		addf f26,f8,f17	;; M2[8] <- M0[8] + M1[8]
 
 	;;;;;;;;;;;;;;;;;STEP2;;;;;;;;;;;;;;;;;;; 
 	
@@ -106,61 +116,61 @@
 
 		;; M0(A) * M1(B) -> M2
 		;;First row
-		multf f18,f0,f9
-		multf f28,f1,f12
-		multf f29,f2,f15
-		addf f30,f18,f28
-		addf f18,f29,f30
+		multf f18,f0,f9 	;; R0 C0 (1) A[0]*B[0]
+		multf f28,f1,f12	;; R0 C0 (2) A[1]*B[3]
+		multf f29,f2,f15	;; R0 C0 (3) A[2]*B[6]
+		addf f30,f18,f28	;; R0 (4) (1)+(2)
+		addf f18,f29,f30	;; R0 (5) ((1)+(2))+(3)
 
-		multf f19,f0,f10
-		multf f28,f1,f13
-		multf f29,f2,f16
-		addf f30,f19,f28
-		addf f19,f29,f30
+		multf f19,f0,f10	;; R0 C1 (1) A[0]*B[1]
+		multf f28,f1,f13	;; R0 C1 (2) A[1]*B[4]
+		multf f29,f2,f16	;; R0 C1 (2) A[2]*B[7]
+		addf f30,f19,f28	;; R0 (4) (1)+(2)
+		addf f19,f29,f30	;; R0 (5) ((1)+(2))+(3)
 
-		multf f20,f0,f11
-		multf f28,f1,f14
-		multf f29,f2,f17
-		addf f30,f20,f28
-		addf f20,f29,f30
+		multf f20,f0,f11	;; R0 C2 (1) A[0]*B[2]
+		multf f28,f1,f14	;; R0 C2 (2) A[1]*B[5]
+		multf f29,f2,f17	;; R0 C2 (3) A[2]*B[8]
+		addf f30,f20,f28	;; R0 (4) (1)+(2)
+		addf f20,f29,f30	;; R0 (5) ((1)+(2))+(3)
 
 		;;Second row
-		multf f21,f3,f9
-		multf f28,f4,f12
-		multf f29,f5,f15
-		addf f30,f21,f28
-		addf f21,f29,f30
+		multf f21,f3,f9		;; R1 C0 (1) A[3]*B[0]
+		multf f28,f4,f12	;; R1 C0 (2) A[4]*B[3]
+		multf f29,f5,f15	;; R1 C0 (3) A[5]*B[6]
+		addf f30,f21,f28	;; R1 (4) (1)+(2)
+		addf f21,f29,f30	;; R1 (5) ((1)+(2))+(3)
 
-		multf f22,f3,f10
-		multf f28,f4,f13
-		multf f29,f5,f16
-		addf f30,f22,f28
-		addf f22,f29,f30
+		multf f22,f3,f10	;; R1 C1 (1) A[3]*B[1]
+		multf f28,f4,f13	;; R1 C1 (2) A[4]*B[4]
+		multf f29,f5,f16	;; R1 C1 (3) A[5]*B[7]
+		addf f30,f22,f28	;; R1 (4) (1)+(2)
+		addf f22,f29,f30	;; R1 (5) ((1)+(2))+(3)
 
-		multf f23,f3,f11
-		multf f28,f4,f14
-		multf f29,f5,f17
-		addf f30,f23,f28
-		addf f23,f29,f30
+		multf f23,f3,f11	;; R1 C2 (1) A[3]*B[2]
+		multf f28,f4,f14	;; R1 C2 (2) A[4]*B[5]
+		multf f29,f5,f17	;; R1 C2 (3) A[5]*B[8]
+		addf f30,f23,f28	;; R1 (4) (1)+(2)
+		addf f23,f29,f30	;; R1 (5) ((1)+(2))+(3)
 
 		;;Third row
-		multf f24,f6,f9
-		multf f28,f7,f12
-		multf f29,f8,f15
-		addf f30,f24,f28
-		addf f24,f29,f30
+		multf f24,f6,f9		;; R2 C0 (1) A[6]*B[0]
+		multf f28,f7,f12	;; R2 C0 (2) A[7]*B[3]
+		multf f29,f8,f15	;; R2 C0 (3) A[8]*B[6]
+		addf f30,f24,f28	;; R2 (4) (1)+(2)
+		addf f24,f29,f30	;; R2 (5) ((1)+(2))+(3)
 
-		multf f25,f6,f10
-		multf f28,f7,f13
-		multf f29,f8,f16
-		addf f30,f25,f28
-		addf f25,f29,f30
+		multf f25,f6,f10	;; R2 C1 (1) A[6]*B[1]
+		multf f28,f7,f13	;; R2 C1 (2) A[7]*B[4]
+		multf f29,f8,f16	;; R2 C1 (3) A[8]*B[7]
+		addf f30,f25,f28	;; R2 (4) (1)+(2)
+		addf f25,f29,f30	;; R2 (5) ((1)+(2))+(3)
 
-		multf f26,f6,f11
-		multf f28,f7,f14
-		multf f29,f8,f17
-		addf f30,f26,f28
-		addf f26,f29,f30
+		multf f26,f6,f11	;; R2 C2 (1) A[6]*B[2]
+		multf f28,f7,f14	;; R2 C2 (2) A[7]*B[5]
+		multf f29,f8,f17	;; R2 C2 (3) A[8]*B[8]
+		addf f30,f26,f28	;; R2 (4) (1)+(2)
+		addf f26,f29,f30	;; R2 (5) ((1)+(2))+(3)
 
 	;;;;;;;;;;;;;;;;;STEP4;;;;;;;;;;;;;;;;;;;
 
