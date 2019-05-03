@@ -10,7 +10,8 @@
 ;;	M = (A * B) * (1/|A + B|) + C*Alfa	;;
 ;;										;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;	S -> Suma A+B
+;;	R -> Regs aux f27-f31
 
 .data
 	A:	.float 1.500000, 2.750000, 3.257000
@@ -47,88 +48,104 @@
 		lf f9,B		;; Load B[0] -> f9
 		lf f1,A+4	;; Load A[1] -> f1
 
-		addf f18,f0,f9 	;; M2[0] <- M0[0] + M1[0]
-		multf f27,f0,f9	;; R[0] <- M0[0] * M1[0]
+		addf f18,f0,f9 	;;A+B -> S[0] <- A[0] + B[0]
+		multf f27,f0,f9	;;A*B -> R[0] <- A[0] * B[0]
 
 		lf f10,B+4		;; Load B[1] -> f10
 		lf f2,A+8		;; Load A[2] -> f2
 		lf f11,B+8		;; Load B[2] -> f11
 
-		addf f19,f1,f10	;; M2[1] <- M0[1] + M1[1]
-		multf f28,f1,f10;; R[1] <- M0[1] * M1[1]
+		addf f19,f1,f10	;;A+B -> S[1] <- A[1] + B[1]
+		multf f28,f0,f10;;A*B -> R[1] <- A[0] * B[1]
 
 		lf f3,A+12		;; Load A[3] -> f3
 		lf f12,B+12		;; Load B[3] -> f12
-		sf AuxM,f27		;; Store R[0] (M0[0] * M1[0])
+		sf AuxM,f27		;;A*B -> Store R[0] (A[0] * B[0])
 
-		addf f20,f2,f11	;; M2[2] <- M0[2] + M1[2]
-		multf f29,f2,f11;; R[2] <- M0[2] * M1[2]
+		addf f20,f2,f11	;;A+B -> S[2] <- A[2] + B[2]
+		multf f29,f0,f11;;A*B -> R[2] <- A[0] * B[2]
 
 		lf f4,A+16		;; Load A[4] -> f4
 		lf f13,B+16		;; Load B[4] -> f13
-		sf AuxM+4,f28	;; Store R[1] (M0[1] * M1[1])
+		sf AuxM+4,f28	;;A*B -> Store R[1] (A[0] * B[1])
 
-		addf f21,f3,f12	;; M2[3] <- M0[3] + M1[3]
-		multf f27,f3,f12;; R[0] <- M0[3] * M1[3]
+		addf f21,f3,f12	;;A+B -> S[3] <- A[3] + B[3]
+		multf f27,f1,f12;;A*B -> R[0] <- A[1] * B[3]
 
 		lf f5,A+20		;; Load A[5] -> f5
 		lf f14,B+20		;; Load B[5] -> f14
-		sf AuxM+8,f29	;; Store R[2] (M0[2] * M1[2])
+		sf AuxM+8,f29	;;A*B -> Store R[2] (A[0] * B[2])
 
-		addf f22,f4,f13	;; M2[4] <- M0[4] + M1[4]
-		multf f28,f4,f13;; R[1] <- M0[4] * M1[4]
+		addf f22,f4,f13	;;A+B -> S[4] <- A[4] + B[4]
+		multf f28,f1,f13;;A*B -> R[1] <- A[1] * B[4]
 
 		lf f6,A+24		;; Load A[6] -> f6
 		lf f15,B+24		;; Load B[6] -> f15
-		sf AuxM+12,f27	;; Store R[0] (M0[3] * M1[3])
+		sf AuxM+12,f27	;;A*B -> Store R[0] (A[1] * B[3])
 
-		addf f23,f5,f14	;; M2[5] <- M0[5] + M1[5]
-		multf f29,f5,f14;; R[2] <- M0[5] * M1[5]
+		addf f23,f5,f14	;;A+B -> S[5] <- A[5] + B[5]
+		multf f29,f1,f14;;A*B -> R[2] <- A[1] * B[5]
 
 		lf f7,A+28		;; Load A[7] -> f7
 		lf f16,B+28		;; Load B[7] -> f16
-		sf AuxM+16,f28	;; Store R[1] (M0[4] * M1[4])
+		sf AuxM+16,f28	;;A*B -> Store R[1] (A[1] * B[4])
 
-		addf f24,f6,f15	;; M2[6] <- M0[6] + M1[6]
-		multf f27,f6,f15;; R[0] <- M0[6] * M1[6]
+		addf f24,f6,f15	;;A+B -> S[6] <- A[6] + B[6]
+		multf f27,f2,f15;;A*B -> R[0] <- A[2] * B[6]
 
-		lf f8,A+32	;; Load A[8] -> f8
-		lf f17,B+32	;; Load B[8] -> f17
-		sf AuxM+20,f29	;; Store R[2] (M0[5] * M1[5])
+		lf f8,A+32		;; Load A[8] -> f8
+		lf f17,B+32		;; Load B[8] -> f17
+		sf AuxM+20,f29	;;A*B -> Store R[2] (A[1] * B[5])
 
-		addf f25,f7,f16	;; M2[7] <- M0[7] + M1[7]
-		multf f28,f7,f16;; R[1] <- M0[7] * M1[7]
+		addf f25,f7,f16	;;A+B -> S[7] <- A[7] + B[7]
+		multf f28,f2,f16;;A*B -> R[1] <- A[2] * B[7]
 
-		sf AuxM+24,f27	;; Store R[0] (M0[6] * M1[6])
+		lf f0,AuxM 		;;A*B -> Load AuxM[0](A[0]*B[0]) -> f0
+		lf f1,AuxM+4 	;;A*B -> Load AuxM[1](A[0]*B[1]) -> f1
+		sf AuxM+24,f27	;;A*B -> Store R[0] (A[2] * B[6])
 
-		addf f26,f8,f17	;; M2[8] <- M0[8] + M1[8]
-		multf f29,f8,f17;; R[2] <- M0[8] * M1[8]
+		addf f26,f2,f17	;;A+B -> S[8] <- A[2] + B[8]
+		multf f29,f2,f17;;A*B -> R[2] <- A[2] * B[8]
 
-		sf AuxM+24,f28	;; Store R[1] (M0[7] * M1[7])
-		sf AuxM+24,f29	;; Store R[2] (M0[8] * M1[8])
+		sf AuxM+28,f28	;;A*B -> Store R[1] (A[2] * B[7])
+		lf f2,AuxM+8 	;;A*B -> Load AuxM[2](A[0]*B[2]) -> f2
+		lf f3,AuxM+12 	;;A*B -> Load AuxM[3](A[1]*B[3]) -> f3
 
 
-	;;;;;;;;;;;;;;;;;STEP2;;;;;;;;;;;;;;;;;;; 
+	;;;;;;;;;;;;;;;;;STEP2 ANTIGUO;;;;;;;;;;;;;;;;;;; 
 	
-		;; |M2(A+B)| -> K
+		;; |A+B|
 
-		multf f28,f23,f25 ;; M2[5] * M2[7]
-		multf f27,f22,f26 ;; M2[4] * M2[8]
-		subf f29,f27,f28  ;; M2[4] * M2[8] - M2[5] * M2[7]
-		multf f31,f18,f29 ;; M2[0] * (M2[4] * M2[8] - M2[5] * M2[7])
+		addf f7,f0,f1 		;;A*B -> A[0]*B[0] + A[1]*B[3]
+		multf f28,f23,f25	;;|A+B| -> S[5] * S[7]
 
-		multf f27,f21,f26 ;; M2[3] * M2[8]
-		multf f28,f23,f24 ;; M2[5] * M2[6]
-		subf f29,f27,f28  ;; M2[3] * M2[8] - M2[5] * M2[6]
-		multf f30,f19,f29 ;; M[1] * (M2[3] * M2[8] - M2[5] * M2[6])
+		sf AuxM+32,f29		;;A*B -> Store R[2] (A[2] * B[8])
+		lf f0,AuxM+16		;;A*B -> Load AuxM[4](A[1]*B[4]) -> f0
+		lf f1,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f1
 
-		multf f27,f21,f25 ;; M2[3] * M2[7]
+		addf f8,f7,f2 		;;A*B -> A[0]*B[0] + A[1]*B[3] + A[2]*B[6]
+		multf f27,f22,f26 ;; S[4] * S[8]
 
-		subf f28,f31,f30 ;;M2[0] * (M2[4] * M2[8] - M2[5] * M2[7]) - M[1] * (M2[3] * M2[8] - M2[5] * M2[6])
+		
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		
 
-		multf f29,f22,f24 ;; M2[4] * M2[6]
-		subf f30,f27,f29  ;; M2[3] * M2[7] - M2[4] * M2[6]
-		multf f31,f30,f20 ;; M2[2] * (M2[3] * M2[7] - M2[4] * M2[6])
+
+		subf f29,f27,f28  ;; S[4] * S[8] - S[5] * S[7]
+		multf f31,f18,f29 ;; S[0] * (S[4] * S[8] - S[5] * S[7])
+
+		multf f27,f21,f26 ;; S[3] * S[8]
+		multf f28,f23,f24 ;; S[5] * S[6]
+		subf f29,f27,f28  ;; S[3] * S[8] - S[5] * S[6]
+		multf f30,f19,f29 ;; M[1] * (S[3] * S[8] - S[5] * S[6])
+
+		multf f27,f21,f25 ;; S[3] * S[7]
+
+		subf f28,f31,f30 ;;S[0] * (S[4] * S[8] - S[5] * S[7]) - M[1] * (S[3] * S[8] - S[5] * S[6])
+
+		multf f29,f22,f24 ;; S[4] * S[6]
+		subf f30,f27,f29  ;; S[3] * S[7] - S[4] * S[6]
+		multf f31,f30,f20 ;; S[2] * (S[3] * S[7] - S[4] * S[6])
 
 		addf f27,f28,f31
 
@@ -212,7 +229,7 @@
 		multf f5,f23,f31
 		multf f6,f24,f31
 		multf f7,f25,f31
-		multf f8,f26,f31
+		multf f8,f26,f31	
 
 	;;;;;;;;;;;;;;;;;STEP5;;;;;;;;;;;;;;;;;;;	
 		
