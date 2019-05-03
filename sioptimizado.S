@@ -29,6 +29,10 @@
 		.float 0.000000, 0.000000, 0.000000
 		.float 0.000000, 0.000000, 0.000000
 
+	AuxM:.float 0.000000, 0.000000, 0.000000
+		.float 0.000000, 0.000000, 0.000000
+		.float 0.000000, 0.000000, 0.000000
+
 	Alfa:	.float 1.235
 
 	uno: .float 1.0
@@ -41,47 +45,68 @@
 
 		lf f0,A		;; Load A[0] -> f0
 		lf f9,B		;; Load B[0] -> f9
-
 		lf f1,A+4	;; Load A[1] -> f1
-		lf f10,B+4	;; Load B[1] -> f10
 
+		addf f18,f0,f9 	;; M2[0] <- M0[0] + M1[0]
+		multf f27,f0,f9	;; R[0] <- M0[0] * M1[0]
 
-		lf f2,A+8	;; Load A[2] -> f2
-		lf f11,B+8	;; Load B[2] -> f11
+		lf f10,B+4		;; Load B[1] -> f10
+		lf f2,A+8		;; Load A[2] -> f2
+		lf f11,B+8		;; Load B[2] -> f11
 
+		addf f19,f1,f10	;; M2[1] <- M0[1] + M1[1]
+		multf f28,f1,f10;; R[1] <- M0[1] * M1[1]
 
-		lf f3,A+12	;; Load A[3] -> f3
-		lf f12,B+12	;; Load B[3] -> f12
+		lf f3,A+12		;; Load A[3] -> f3
+		lf f12,B+12		;; Load B[3] -> f12
+		sf AuxM,f27		;; Store R[0] (M0[0] * M1[0])
 
+		addf f20,f2,f11	;; M2[2] <- M0[2] + M1[2]
+		multf f29,f2,f11;; R[2] <- M0[2] * M1[2]
 
-		lf f4,A+16	;; Load A[4] -> f4
-		lf f13,B+16	;; Load B[4] -> f13
+		lf f4,A+16		;; Load A[4] -> f4
+		lf f13,B+16		;; Load B[4] -> f13
+		sf AuxM+4,f28	;; Store R[1] (M0[1] * M1[1])
 
+		addf f21,f3,f12	;; M2[3] <- M0[3] + M1[3]
+		multf f27,f3,f12;; R[0] <- M0[3] * M1[3]
 
-		lf f5,A+20	;; Load A[5] -> f5
-		lf f14,B+20	;; Load B[5] -> f14
+		lf f5,A+20		;; Load A[5] -> f5
+		lf f14,B+20		;; Load B[5] -> f14
+		sf AuxM+8,f29	;; Store R[2] (M0[2] * M1[2])
 
+		addf f22,f4,f13	;; M2[4] <- M0[4] + M1[4]
+		multf f28,f4,f13;; R[1] <- M0[4] * M1[4]
 
-		lf f6,A+24	;; Load A[6] -> f6
-		lf f15,B+24	;; Load B[6] -> f15
+		lf f6,A+24		;; Load A[6] -> f6
+		lf f15,B+24		;; Load B[6] -> f15
+		sf AuxM+12,f27	;; Store R[0] (M0[3] * M1[3])
 
+		addf f23,f5,f14	;; M2[5] <- M0[5] + M1[5]
+		multf f29,f5,f14;; R[2] <- M0[5] * M1[5]
 
-		lf f7,A+28	;; Load A[7] -> f7
-		lf f16,B+28	;; Load B[7] -> f16
+		lf f7,A+28		;; Load A[7] -> f7
+		lf f16,B+28		;; Load B[7] -> f16
+		sf AuxM+16,f28	;; Store R[1] (M0[4] * M1[4])
 
+		addf f24,f6,f15	;; M2[6] <- M0[6] + M1[6]
+		multf f27,f6,f15;; R[0] <- M0[6] * M1[6]
 
 		lf f8,A+32	;; Load A[8] -> f8
 		lf f17,B+32	;; Load B[8] -> f17
+		sf AuxM+20,f29	;; Store R[2] (M0[5] * M1[5])
 
-		addf f18,f0,f9	;; M2[0] <- M0[0] + M1[0]
-		addf f19,f1,f10	;; M2[1] <- M0[1] + M1[1]
-		addf f20,f2,f11	;; M2[2] <- M0[2] + M1[2]
-		addf f21,f3,f12	;; M2[3] <- M0[3] + M1[3]
-		addf f22,f4,f13	;; M2[4] <- M0[4] + M1[4]
-		addf f23,f5,f14	;; M2[5] <- M0[5] + M1[5]
-		addf f24,f6,f15	;; M2[6] <- M0[6] + M1[6]
 		addf f25,f7,f16	;; M2[7] <- M0[7] + M1[7]
+		multf f28,f7,f16;; R[1] <- M0[7] * M1[7]
+
+		sf AuxM+24,f27	;; Store R[0] (M0[6] * M1[6])
+
 		addf f26,f8,f17	;; M2[8] <- M0[8] + M1[8]
+		multf f29,f8,f17;; R[2] <- M0[8] * M1[8]
+
+		sf AuxM+24,f28	;; Store R[1] (M0[7] * M1[7])
+		sf AuxM+24,f29	;; Store R[2] (M0[8] * M1[8])
+
 
 	;;;;;;;;;;;;;;;;;STEP2;;;;;;;;;;;;;;;;;;; 
 	
