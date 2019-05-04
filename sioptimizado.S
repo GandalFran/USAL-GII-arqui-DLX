@@ -101,15 +101,15 @@
 		multf f28,f2,f16;;A*B -> R[1] <- A[2] * B[7]
 
 		lf f0,AuxM 		;;A*B -> Load AuxM[0](A[0]*B[0]) -> f0
-		lf f1,AuxM+4 	;;A*B -> Load AuxM[1](A[0]*B[1]) -> f1
+		lf f1,AuxM+12 	;;A*B -> Load AuxM[1](A[1]*B[3]) -> f1
 		sf AuxM+24,f27	;;A*B -> Store R[0] (A[2] * B[6])
 
 		addf f26,f2,f17	;;A+B -> S[8] <- A[2] + B[8]
 		multf f29,f2,f17;;A*B -> R[2] <- A[2] * B[8]
 
 		sf AuxM+28,f28	;;A*B -> Store R[1] (A[2] * B[7])
-		lf f2,AuxM+8 	;;A*B -> Load AuxM[2](A[0]*B[2]) -> f2
-		lf f3,AuxM+12 	;;A*B -> Load AuxM[3](A[1]*B[3]) -> f3
+		lf f2,AuxM+24 	;;A*B -> Load AuxM[6](A[2]*B[6]) -> f2
+		lf f6,AuxM+4 	;;A*B -> Load AuxM[1](A[0]*B[1]) -> f3
 
 
 	;;;;;;;;;;;;;;;;;STEP2 ANTIGUO;;;;;;;;;;;;;;;;;;; 
@@ -118,36 +118,108 @@
 
 		addf f7,f0,f1 		;;A*B -> A[0]*B[0] + A[1]*B[3]
 		multf f28,f23,f25	;;|A+B| -> S[5] * S[7]
-
+		
 		sf AuxM+32,f29		;;A*B -> Store R[2] (A[2] * B[8])
 		lf f0,AuxM+16		;;A*B -> Load AuxM[4](A[1]*B[4]) -> f0
-		lf f1,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f1
+		lf f1,AuxM+28		;;A*B -> Load AuxM[7](A[2]*B[7]) -> f1
 
-		addf f8,f7,f2 		;;A*B -> A[0]*B[0] + A[1]*B[3] + A[2]*B[6]
-		multf f27,f22,f26 ;; S[4] * S[8]
+		addf f31,f2,f6		;;A*B -> A[0]*B[0] + A[1]*B[3] + A[2]*B[6]
+		multf f27,f22,f26	;;S[4] * S[8]
 
+		lf f2,AuxM+8		;;A*B -> Load AuxM[2](A[0]*B[2]) -> f2
+		sf AuxM,f31			;;A*B -> Store R[4] (A[0]*B[0] + A[1]*B[3] + A[2]*B[6])
+		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
+		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
+
+		subf f29,f28,f27  ;; S[4] * S[8] - S[5] * S[7]
+		multf f31,f3,f9		;;A*B -> A[3]*B[0]
+
+		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
+		sf AuxM+40,f29		;;|A+B| -> Store (S[4] * S[8] - S[5] * S[7])
+		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
+
+		addf f30,f6,f0		;;A*B -> A[0]*B[1] + A[1]*B[4]
+		multf f27,f21,f26	;;S[3] * S[8]
+
+		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
+		sf AuxM+36,f31		;;A*B -> Store R[4] (A[3]*B[0])
+		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
+
+		addf f6,f30,f1		;;A*B -> A[0]*B[1] + A[1]*B[4] + A[2]*B[7]
+		multf f28,f23,f26	;;S[5] * S[6]
+
+		lf f30,AuxM+40		;;|A+B| -> Load AuxM[9](S[4] * S[8] - S[5] * S[7]) -> f30
+		sf AuxM+4,f6		;;A*B -> (A[0]*B[1] + A[1]*B[4] + A[2]*B[7])
+		lf f23,C+8			;;Load C[2]
+		lf f26,C+20			;;Load C[6]
+
+		subf f29,f27,f28	;; S[3] * S[8] - S[5] * S[6]
+		multf f1,f4,f12		;; A*B -> A[4]*B[3]
+
+		lf f0,AuxM+36		;; A*B -> Load AuxM[9](A[3]*B[0]) -> f8
+		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
+		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
+
+		addf f6,f2,f7		;; A*B -> A[0]*B[2] + A[1]*B[5]
+		multf f27,f21,f5	;; S[3] * S[7]
+
+		lf f21,C			;;Load C[0]
+		lf f25,C			;;Load C[5]
+		lf f0,AuxM+36		;; A*B -> Load AuxM[9](A[3]*B[0]) -> f8
+
+		addf f7,f5,f8		;;A*B -> A[0]*B[2] + A[1]*B[5] + A[2]*B[8]
+		multf f28,f22,f24   ;;S[4] * S[6]
+
+		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
+		sf AuxM+12,f6		;;A*B -> Store AuxM[2](A[0]*B[2] + A[1]*B[5] + A[2]*B[8])
+		lf f22,C+4			;;Load C[1] 
+		lf f24,C+12			;;Load C[3]
+
+		subf f31,f27,f28	;; S[3] * S[7] - S[4] * S[6]
+		multf f2,f5,f15		;;A*B -> A[5]*B[6]
+
+		lf f6,A+24			;;Relleno
+		lf f7,A+28			;;Relleno
+		lf f8,A+32			;;relleno
+
+		addf f6,f0,f1		;;A*B -> A[3]*B[0] + A[4]*B[3]
+		multf f27,f18,f29	;;|A+B| -> S[0]*(S[4] * S[8] - S[5] * S[7])
 		
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-		
+
+		lf f0,A+24			;;Relleno
+		lf f7,A+28			;;Relleno
+		lf f8,A+32			;;relleno
+
+		addf f1,f6,f2		;;A*B -> A[3]*B[0] + A[4]*B[3] + A[5]*B[6]
+		multf f28,f19,f30	;;|A+B| -> S[1]*(S[3] * S[8] - S[5] * S[6])
+
+		lf f0,A+24			;;Relleno
+		sf AuxM+12,f1		;;A*B -> Store AuxM[3](A[3]*B[0] + A[4]*B[3] + A[5]*B[6])
+		lf f7,A+28			;;Relleno
+		lf f8,A+32			;;relleno
+
+		subf f30,f27,f28	;; S[0]*(S[4] * S[8] - S[5] * S[7]) - S[1]*(S[3] * S[8] - S[5] * S[6])
+		multf f0,f3,f10		;;A*B -> A[3]*B[1]
+
+		lf f6,A+24			;;Relleno
+		lf f7,A+28			;;Relleno
+		lf f8,A+32			;;relleno
+
+		multf f27,f20,f31	;;|A+B| -> S[2]*(S[3] * S[7] - S[4] * S[6])
+
+		lf f6,A+24			;;Relleno
+		lf f7,A+28			;;Relleno
+		lf f8,A+32			;;relleno
+		lf f6,A+24			;;Relleno
+
+		addf f31,f30,f27	;;Resultado del determinante
+		multf f1,f3,f10		;;A*B -> A[4]*B[4]
+
+		lf f28, C+4			;;Load C[1]
+		lf f27,C			;;Load C[0]
+		lf f30,Alfa			;;constante
 
 
-		subf f29,f27,f28  ;; S[4] * S[8] - S[5] * S[7]
-		multf f31,f18,f29 ;; S[0] * (S[4] * S[8] - S[5] * S[7])
-
-		multf f27,f21,f26 ;; S[3] * S[8]
-		multf f28,f23,f24 ;; S[5] * S[6]
-		subf f29,f27,f28  ;; S[3] * S[8] - S[5] * S[6]
-		multf f30,f19,f29 ;; M[1] * (S[3] * S[8] - S[5] * S[6])
-
-		multf f27,f21,f25 ;; S[3] * S[7]
-
-		subf f28,f31,f30 ;;S[0] * (S[4] * S[8] - S[5] * S[7]) - M[1] * (S[3] * S[8] - S[5] * S[6])
-
-		multf f29,f22,f24 ;; S[4] * S[6]
-		subf f30,f27,f29  ;; S[3] * S[7] - S[4] * S[6]
-		multf f31,f30,f20 ;; S[2] * (S[3] * S[7] - S[4] * S[6])
-
-		addf f27,f28,f31
 
 	;;;;;;;;;;;;;;;;;STEP3;;;;;;;;;;;;;;;;;;; 
 
