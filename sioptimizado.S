@@ -220,7 +220,7 @@
 		multf f7,f4,f14		;;A*B -> A[4]*B[5]
 
 		sf AuxM+28,f6		;;Store A[3]*B[2]
-		lf f29,C+32			;;Load C[8]
+		;;lf f29,C+32			;;Load C[8]
 
 		multf f8,f5,f17		;;A*B -> A[5]*B[8]
 
