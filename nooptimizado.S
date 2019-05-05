@@ -32,6 +32,7 @@
 	Alfa:	.float 1.235
 
 	uno:	.float 1.0
+	cero:	.float 0.0
 
 .text
 
@@ -73,36 +74,30 @@
 		addf f26,f8,f17
 
 	;;;;;;;;;;;;;;;;;STEP2;;;;;;;;;;;;;;;;;;; 
-	
-		;; 0 -> K
 
 		;; |M2(A+B)| -> K
-		;;Primera parte del determinante
-		multf f28,f18,f22
-		multf f30,f28,f26
+	
+		multf f30,f22,f26
+		multf f31,f23,f25
+		subf f29,f30,f31
+		multf f18,f18,f29
 
-		multf f28,f19,f23
-		multf f29,f28,f24
-		addf f27,f30,f29
+		multf f30,f21,f26
+		multf f31,f23,f24
+		subf f29,f30,f31
+		multf f19,f19,f29
 
-		multf f28,f20,f21
-		multf f29,f28,f25
-		addf f30,f27,f29
+		multf f30,f21,f25
+		multf f31,f22,f24
+		subf f29,f30,f31
+		multf f20,f20,f29
 
-		;;Segunda parte del terminante
-		multf f28,f20,f22
-		multf f29,f28,f24
-		subf f27,f30,f29
+		subf f28,f18,f19
+		addf f27,f28,f20
 
-		multf f28,f23,f25
-		multf f29,f28,f18
-		subf f30,f29,f27
-
-		multf f28,f19,f21
-		multf f29,f28,f26
-		subf f27,f30,f29
-
-		trap 0;
+		lf f28,cero
+		eqf f27,f28
+		bfpt fin
 
 	;;;;;;;;;;;;;;;;;STEP3;;;;;;;;;;;;;;;;;;; 
 
@@ -231,5 +226,6 @@
 		sf M+32,f17
 
 	;;;;;;;;;;;;;;;;;END;;;;;;;;;;;;;;;;;;; 
+fin:
 		trap 0;
 .text
