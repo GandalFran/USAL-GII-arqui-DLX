@@ -31,6 +31,8 @@
 
 	Alfa:	.float 1.235
 
+	uno:	.float 1.0
+
 .text
 
 .global main
@@ -100,7 +102,7 @@
 		multf f29,f28,f26
 		subf f27,f30,f29
 
-		;; TEMPORAL -> K = 1 temporal para poder hacer el resto de ops
+		trap 0;
 
 	;;;;;;;;;;;;;;;;;STEP3;;;;;;;;;;;;;;;;;;; 
 
@@ -161,6 +163,7 @@
 		multf f29,f8,f17
 		addf f30,f26,f28
 		addf f26,f29,f30
+
 
 	;;;;;;;;;;;;;;;;;STEP4;;;;;;;;;;;;;;;;;;;
 

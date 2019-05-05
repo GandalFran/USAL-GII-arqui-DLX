@@ -108,13 +108,12 @@
 		lf f1,AuxM+12 	;;A*B -> Load AuxM[1](A[1]*B[3]) -> f1
 		sf AuxM+24,f27	;;A*B -> Store R[0] (A[2] * B[6])
 
-		addf f26,f2,f17	;;A+B -> S[8] <- A[2] + B[8]
+		addf f26,f8,f17	;;A+B -> S[8] <- A[8] + B[8] -> cambiado f2 por f8
 		multf f29,f2,f17;;A*B -> R[2] <- A[2] * B[8]
 
 		sf AuxM+28,f28	;;A*B -> Store R[1] (A[2] * B[7])
 		lf f2,AuxM+24 	;;A*B -> Load AuxM[6](A[2]*B[6]) -> f2
 		lf f6,AuxM+4 	;;A*B -> Load AuxM[1](A[0]*B[1]) -> f3
-
 
 	;;;;;;;;;;;;;;;;;STEP2 ANTIGUO;;;;;;;;;;;;;;;;;;; 
 	
@@ -135,7 +134,7 @@
 		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
 		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
-		subf f29,f28,f27  ;; S[4] * S[8] - S[5] * S[7]
+		subf f29,f27,f28  ;; S[4] * S[8] - S[5] * S[7] ;; cambiado el orden f28,f27 por f27,f28
 		multf f31,f3,f9		;;A*B -> A[3]*B[0]
 
 		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
@@ -150,7 +149,7 @@
 		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
 		addf f6,f30,f1		;;A*B -> A[0]*B[1] + A[1]*B[4] + A[2]*B[7]
-		multf f28,f23,f26	;;S[5] * S[6]
+		multf f28,f23,f24	;;S[5] * S[6] ;; cambiado f26 por f24
 
 		lf f30,M+4		;;|A+B| -> Load AuxM[9](S[4] * S[8] - S[5] * S[7]) -> f30
 		sf AuxM+4,f6		;;A*B -> (A[0]*B[1] + A[1]*B[4] + A[2]*B[7])
@@ -165,7 +164,7 @@
 		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
 		addf f6,f2,f7		;; A*B -> A[0]*B[2] + A[1]*B[5]
-		multf f27,f21,f5	;; S[3] * S[7]
+		multf f27,f21,f25	;; S[3] * S[7] -> cambiado f5 por f25
 
 		lf f21,C			;;Load C[0]
 		lf f25,C+16			;;Load C[4]
@@ -182,41 +181,22 @@
 		subf f31,f27,f28	;; S[3] * S[7] - S[4] * S[6]
 		multf f2,f5,f15		;;A*B -> A[5]*B[6]
 
-		lf f6,A+24			;;Relleno
-		lf f7,A+28			;;Relleno
-		lf f8,A+32			;;relleno
-
 		addf f6,f0,f1		;;A*B -> A[3]*B[0] + A[4]*B[3]
-		multf f27,f18,f29	;;|A+B| -> S[0]*(S[4] * S[8] - S[5] * S[7])
+		multf f27,f18,f30	;;|A+B| -> S[0]*(S[4] * S[8] - S[5] * S[7])
 		
 
-		lf f0,A+24			;;Relleno
-		lf f7,A+28			;;Relleno
-		lf f8,A+32			;;relleno
-
 		addf f1,f6,f2		;;A*B -> A[3]*B[0] + A[4]*B[3] + A[5]*B[6]
-		multf f28,f19,f30	;;|A+B| -> S[1]*(S[3] * S[8] - S[5] * S[6])
+		multf f28,f19,f29	;;|A+B| -> S[1]*(S[3] * S[8] - S[5] * S[6])
 
-		lf f0,A+24			;;Relleno
 		sf AuxM+12,f1		;;A*B -> Store AuxM[3](A[3]*B[0] + A[4]*B[3] + A[5]*B[6])
-		lf f7,A+28			;;Relleno
-		lf f8,A+32			;;relleno
 
 		subf f30,f27,f28	;; S[0]*(S[4] * S[8] - S[5] * S[7]) - S[1]*(S[3] * S[8] - S[5] * S[6])
 		multf f0,f3,f10		;;A*B -> A[3]*B[1]
 
-		lf f6,A+24			;;Relleno
-		lf f7,A+28			;;Relleno
-		lf f8,A+32			;;relleno
-
 		multf f27,f20,f31	;;|A+B| -> S[2]*(S[3] * S[7] - S[4] * S[6])
 
-		lf f6,A+24			;;Relleno
-		lf f7,A+28			;;Relleno
-		lf f8,A+32			;;relleno
-		lf f6,A+24			;;Relleno
-
 		addf f31,f30,f27	;;Resultado del determinante
+
 		multf f1,f3,f10		;;A*B -> A[4]*B[4]
 
 		lf f28, C+28		;;Load C[7]
@@ -231,84 +211,56 @@
 		eqf f31,f29			;;si el valor del determinante es cero terminamos la ejecución
 		bfpt fin
 
-		addf f8,f0,f1		;;Relleno
 		multf f6,f3,f11		;;A*B -> A[3]*B[2]
 
 		sf AuxM+16,f0		;;Store A[3]*B[1]
 		sf AuxM+20,f1		;;Store A[4]*B[4]
 		sf AuxM+24,f2		;;Store A[5]*B[7]
 
-		addf f2,f0,f1		;;Relleno
 		multf f7,f4,f14		;;A*B -> A[4]*B[5]
 
 		sf AuxM+28,f6		;;Store A[3]*B[2]
 		lf f29,C+32			;;Load C[8]
-		lf f30,Alfa			;;relleno
 
-		addf f2,f0,f1		;;Relleno
 		multf f8,f5,f17		;;A*B -> A[5]*B[8]
 
 		sf AuxM+32,f7		;;Store A[4]*B[5]
 		lf f3,A+24			;; Load A[6]
 		lf f4,A+28			;; Load A[7]
 
-		addf f2,f6,f7		;;relleno
 		multf f0,f3,f9		;;A*B -> A[6]*B[0]
 
 		sf M,f8		;;Store A[5]*B[8]
 		lf f5,A+32			;;Load A[8]
-		lf f30,Alfa			;;relleno
 
-		addf f8,f6,f7		;;relleno
 		multf f1,f4,f12		;;A*B -> A[7]*B[3]
 
 		sf M+4,f0		;;Store A[6]*B[0]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f8,f6,f7		;;relleno
 		multf f2,f5,f15		;;A*B -> A[8]*B[6]
 
 		sf M+8,f1		;;Store A[7]*B[3]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f8,f0,f1		;;relleno
 		multf f6,f3,f10		;;A*B -> A[6]*B[1]
 
 		sf M+12,f2		;;Store A[8]*B[6]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f2,f0,f1		;;relleno
 		multf f7,f4,f13		;;A*B -> A[7]*B[4]
 
 		sf M+16,f6		;;Store A[6]*B[1]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f2,f0,f1		;;relleno
 		multf f8,f5,f16		;;A*B -> A[8]*B[7]
 
 		sf M+20,f7		;;Store A[7]*B[4]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f2,f0,f6		;;relleno
 		multf f0,f3,f11		;;A*B -> A[6]*B[2]
 
 		sf M+24,f8		;;Store A[8]*B[7]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f8,f6,f7		;;relleno
 		multf f1,f4,f14		;;A*B -> A[7]*B[5]
 
 		sf M+28,f0		;;Store A[6]*B[2]
-		lf f30,Alfa			;;relleno
-		lf f29,C+32			;;relleno
 
-		addf f8,f6,f7		;;relleno
 		multf f2,f5,f17		;;A*B -> A[8]*B[8]
 
 		;;;;;;AHORA SE DEBE COMENZARÁ A HACER LA DIVISIÓN, A SU VEZ SE HARAN LAS SUMAS RESTANTES DE A*B Y LAS MULTIPLICACIONES DE C*ALFA;;;;;;;;
@@ -389,75 +341,45 @@
 		multf f27,f9,f29	;;A*B*(1/det) -> Elemento [0]
 
 		lf f16,AuxM+28		;; LOAD A*B[7]
-		lf f15,AuxM+24		;;relleno
+
 		sf AuxM+32,f7		;; STORE A*B -> Elemento[8]
-		lf f31,Alfa			;;Relleno
 
 		addf f0,f27,f18		;;TOTAL[0]
 		multf f28,f10,f29	;;A*B*(1/det) -> Elemento [1]
+		sf M,f0				;;Store TOTAL[0]
 
-		lf f16,AuxM+28		;;relleno
 		lf f17,AuxM+32		;;LOAD A*B[8]
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
 
 		addf f1,f28,f19		;;TOTAL[1]
 		multf f27,f11,f29	;;A*B*(1/det) -> Elemento [2]
-
-		lf f16,AuxM+28		;;relleno
-		lf f17,AuxM+32		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+4,f1			;;Store TOTAL[1]
 
 		addf f2,f27,f20	;;TOTAL[2]
 		multf f28,f12,f29	;;A*B*(1/det) -> Elemento [3]
-
-		lf f16,AuxM+28		;;relleno
-		lf f17,AuxM+32		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+8,f2			;;Store TOTAL[2]
 
 		addf f3,f28,f21		;;TOTAL[3]
 		multf f27,f13,f29	;;A*B*(1/det) -> Elemento [4]
-
-		lf f16,AuxM+28		;;relleno
-		lf f17,AuxM+32		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+12,f3			;;Store TOTAL[3]
 
 		addf f4,f27,f22		;;TOTAL[4]
 		multf f28,f14,f29	;;A*B*(1/det) -> Elemento [5]
-
-		lf f16,AuxM+28		;;relleno
-		lf f17,AuxM+32		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+16,f4			;;Store TOTAL[4]
 
 		addf f5,f28,f23		;;TOTAL[5]
 		multf f27,f15,f29	;;A*B*(1/det) -> Elemento [6]
-
-		lf f16,AuxM+28		;;relleno
-		lf f17,AuxM+32		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+20,f5			;;Store TOTAL[5]
 
 		addf f6,f27,f24		;;TOTAL[6]
 		multf f28,f16,f29	;;A*B*(1/det) -> Elemento [7]
-
-		lf f14,AuxM+20		;;relleno
-		lf f15,AuxM+24		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+24,f6			;;Store TOTAL[6]
 
 		addf f7,f28,f25		;;TOTAL[7]
 		multf f27,f17,f29	;;A*B*(1/det) -> Elemento [8]
-
-		lf f14,AuxM+20		;;relleno
-		lf f15,AuxM+24		;;relleno
-		lf f30,Alfa			;;Relleno
-		lf f31,Alfa			;;Relleno
+		sf M+28,f7			;;Store TOTAL[7]
 
 		addf f8,f27,f26		;;TOTAL[8]
+		sf M+32,f8			;;Store TOTAL[8]
 
 	;;;;;;;;;;;;;;;;;END;;;;;;;;;;;;;;;;;;;
 	fin:
