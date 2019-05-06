@@ -341,7 +341,7 @@
 		multf f28,f10,f29	;; A*B*(1/det) -> (A*B*1/det(|A+B|))[1]
 		sf M,f0				;; Store TOTAL[0]
 
-		lf f17,AuxM+32		;; Load A*B[8]
+		lf f17,AuxM+32		;; A*B -> Load A*B[8]
 
 		addf f1,f28,f19		;; TOTAL[1]
 		multf f27,f11,f29	;; A*B*(1/det) -> (A*B*1/det(|A+B|))[2]
