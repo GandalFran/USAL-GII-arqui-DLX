@@ -170,11 +170,11 @@
 		lf f25,C+16			;;Load C[4]
 		lf f0,M		;; A*B -> Load AuxM[9](A[3]*B[0]) -> f8
 
-		addf f7,f5,f8		;;A*B -> A[0]*B[2] + A[1]*B[5] + A[2]*B[8]
+		addf f7,f6,f8		;;A*B -> A[0]*B[2] + A[1]*B[5] + A[2]*B[8] cambiado f5 por f6
 		multf f28,f22,f24   ;;S[4] * S[6]
 
 		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
-		sf AuxM+12,f6		;;A*B -> Store AuxM[2](A[0]*B[2] + A[1]*B[5] + A[2]*B[8])
+		sf AuxM+8,f7		;;A*B -> Store AuxM[2](A[0]*B[2] + A[1]*B[5] + A[2]*B[8]) cambiado f6 por f7 y +12 por +8
 		lf f22,C+4			;;Load C[1] 
 		lf f24,C+12			;;Load C[3]
 
