@@ -33,12 +33,11 @@
 	AuxM:.float 0.000000, 0.000000, 0.000000
 		.float 0.000000, 0.000000, 0.000000
 		.float 0.000000, 0.000000, 0.000000
+		.float 0.000000
 
 	Alfa:	.float 1.235
 
 	Cero:	.float 0.0
-
-	Comodin:	.float 0.0
 
 	uno: .float 1.0
 
@@ -268,7 +267,7 @@
 		addf f6,f3,f4		;;A*B -> Parte Elemento [4]
 		multf f18,f21,f30	;;C*alfa[0]
 
-		sf Comodin,f2		;;Store A[8]*B[8]
+		sf AuxM+36,f2		;;Store A[8]*B[8]
 		lf f5,AuxM+24		;;LOAD A[5]*B[7]
 		lf f0,AuxM+28		;;LOAD A[3]*B[2]
 
@@ -324,7 +323,7 @@
 		addf f6,f3,f4		;;A*B -> Parte Elemento [8]
 		multf f26,f31,f30	;;C*alfa[8]
 
-		lf f5,Comodin		;;LOAD A[8]*B[8]
+		lf f5,AuxM+36		;;LOAD A[8]*B[8]
 		lf f14,AuxM+20		;;LOAD A*B[5]
 		lf f15,AuxM+24		;;LOAD A*B[6]
 
