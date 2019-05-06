@@ -126,7 +126,7 @@
 		lf f0,AuxM+16		;;A*B -> Load AuxM[4](A[1]*B[4]) -> f0
 		lf f1,AuxM+28		;;A*B -> Load AuxM[7](A[2]*B[7]) -> f1
 
-		addf f31,f2,f6		;;A*B -> A[0]*B[0] + A[1]*B[3] + A[2]*B[6]
+		addf f31,f2,f7		;;A*B -> A[0]*B[0] + A[1]*B[3] + A[2]*B[6] cambiado f6 por f7
 		multf f27,f22,f26	;;S[4] * S[8]
 
 		lf f2,AuxM+8		;;A*B -> Load AuxM[2](A[0]*B[2]) -> f2
