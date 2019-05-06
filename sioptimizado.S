@@ -131,22 +131,16 @@
 
 		lf f2,AuxM+8		;;A*B -> Load AuxM[2](A[0]*B[2]) -> f2
 		sf AuxM,f31			;;A*B -> Store R[4] (A[0]*B[0] + A[1]*B[3] + A[2]*B[6])
-		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
-		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
 		subf f29,f27,f28  ;; S[4] * S[8] - S[5] * S[7] ;; cambiado el orden f28,f27 por f27,f28
 		multf f31,f3,f9		;;A*B -> A[3]*B[0]
-
-		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
+		
 		sf M+4,f29		;;|A+B| -> Store (S[4] * S[8] - S[5] * S[7])
-		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
 		addf f30,f6,f0		;;A*B -> A[0]*B[1] + A[1]*B[4]
 		multf f27,f21,f26	;;S[3] * S[8]
 
-		lf f7,AuxM+20		;;A*B -> Load AuxM[5](A[1]*B[5]) -> f7
 		sf M,f31		;;A*B -> Store R[4] (A[3]*B[0])
-		lf f8,AuxM+32		;;A*B -> Load AuxM[8](A[2]*B[8]) -> f8
 
 		addf f6,f30,f1		;;A*B -> A[0]*B[1] + A[1]*B[4] + A[2]*B[7]
 		multf f28,f23,f24	;;S[5] * S[6] ;; cambiado f26 por f24
@@ -197,7 +191,7 @@
 
 		addf f31,f30,f27	;;Resultado del determinante
 
-		multf f1,f3,f10		;;A*B -> A[4]*B[4]
+		multf f1,f4,f13		;;A*B -> A[4]*B[4] cambiado f3 por f4 y f10 por f13
 
 		lf f28, C+28		;;Load C[7]
 		lf f27,C+24			;;Load C[6]
@@ -205,7 +199,7 @@
 
 		;;;;;;HACER EL RESTO DE MULTIPLICACIONES DE A*B;;;;;;
 
-		multf f2,f4,f16		;;A*B -> A[5]*B[7]
+		multf f2,f5,f16		;;A*B -> A[5]*B[7] cambiado f4 por f5
 
 		lf f30,Alfa			;;constante
 		eqf f31,f29			;;si el valor del determinante es cero terminamos la ejecución
